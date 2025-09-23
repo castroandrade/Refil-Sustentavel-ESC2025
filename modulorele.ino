@@ -15,10 +15,11 @@
 const int pino_rele = 16;
 const int botao_A = 5;
 const int botao_B = 6;
-
+const int vazao_ml_30s = 2000;
+const int tempo_vazao_100ml = 6000000/vazao_L_30s;
 // Função para configurar o pino do relé como SAÍDA e desligá-lo.
 // (Relés "ativos em nível baixo" desligam com HIGH)
-void iniciar_rele() {
+void para_rele() {
   pinMode(pino_rele, OUTPUT);
   digitalWrite(pino_rele, HIGH); // Garante que o relé comece desligado
   Serial.println("Sistema do Rele INICIADO. Rele DESLIGADO.");
@@ -26,7 +27,7 @@ void iniciar_rele() {
 
 // Função para "desconfigurar" o pino do relé, colocando-o em modo de entrada.
 // Isso faz com que o pino pare de enviar sinal, desligando o relé.
-void parar_rele() {
+void inicia_rele() {
   pinMode(pino_rele, INPUT);
   Serial.println("Sistema do Rele PARADO.");
 }
@@ -50,11 +51,10 @@ void loop() {
   // digitalRead(botao_A) == LOW significa que o botão foi pressionado
   if (digitalRead(botao_A) == LOW) {
     iniciar_rele();
-    // Um pequeno delay para evitar que a função seja chamada múltiplas vezes
-    // enquanto o botão está pressionado (efeito "debounce").
-    delay(200);
+    // Deley para preenchimento medio de 100ml a uma vazão de 4L por min 
+    delay(tempo_vazao_100ml);
+    para_rele();
   }
-
   // Verifica o estado do botão B
   if (digitalRead(botao_B) == LOW) {
     parar_rele();
