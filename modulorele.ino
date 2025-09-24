@@ -124,16 +124,18 @@ Serial.begin(115200);
 void loop() {
   // Verifica o estado do botão A
   // digitalRead(botao_A) == LOW significa que o botão foi pressionado
- 
+ set_rgb_color(0, 255, 0);
   bool is_dispensing = false;
   update_display(volume,is_dispensing);
   if (digitalRead(botao_A) == LOW) {
     iniciar_rele();
+    set_rgb_color(0, 0, 255);
     is_dispensing = true;
     update_display(volume,is_dispensing);
     // Deley para preenchimento medio de 100ml a uma vazão de 4L por min 
     delay(tempo_vazao_50ml*volume);
     parar_rele();
+    set_rgb_color(0, 255, 0);
     is_dispensing=false;    
     volume = 0;
     update_display(volume,is_dispensing);
@@ -142,6 +144,7 @@ void loop() {
   // Verifica o estado do botão B
   if (digitalRead(botao_B) == LOW) {
     volume++;
+    set_rgb_color(255, 0, 0);
     delay(200);
   }
 }
