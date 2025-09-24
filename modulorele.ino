@@ -1,25 +1,15 @@
-/*
- * Código para controlar um Módulo Relé com dois botões na Raspberry Pi Pico.
- *
- * Conexões do Relé:
- * - VCC do relé -> VBUS (Pino 40) da Pico para obter 5V
- * - GND do relé -> GND (qualquer pino GND) da Pico
- * - IN do relé  -> GP16 (Pino 21) da Pico
- *
- * Conexões dos Botões:
- * - Botão A: Um lado no GP5 (Pino 7), o outro lado em um pino GND.
- * - Botão B: Um lado no GP6 (Pino 9), o outro lado em um pino GND.
- */
+#define JOYSTICK_BUTTON 22
+#define JOYSTICK_X 26
+#define JOYSTICK_Y 27
+#define pino_rele  16
+#define botao_A  5
+#define botao_B  6
 
-// Define os pinos que serão usados
-const int pino_rele = 16;
-const int botao_A = 5;
-const int botao_B = 6;
 const int vazao_ml_30s = 2000;
-const int tempo_vazao_100ml = 6000000/vazao_L_30s;
+const int tempo_vazao_100ml = 6000000/vazao_ml_30s;
 // Função para configurar o pino do relé como SAÍDA e desligá-lo.
 // (Relés "ativos em nível baixo" desligam com HIGH)
-void para_rele() {
+void iniciar_rele() {
   pinMode(pino_rele, OUTPUT);
   digitalWrite(pino_rele, HIGH); // Garante que o relé comece desligado
   Serial.println("Sistema do Rele INICIADO. Rele DESLIGADO.");
@@ -27,7 +17,7 @@ void para_rele() {
 
 // Função para "desconfigurar" o pino do relé, colocando-o em modo de entrada.
 // Isso faz com que o pino pare de enviar sinal, desligando o relé.
-void inicia_rele() {
+void parar_rele() {
   pinMode(pino_rele, INPUT);
   Serial.println("Sistema do Rele PARADO.");
 }
@@ -49,11 +39,12 @@ void setup() {
 void loop() {
   // Verifica o estado do botão A
   // digitalRead(botao_A) == LOW significa que o botão foi pressionado
+  
   if (digitalRead(botao_A) == LOW) {
     iniciar_rele();
     // Deley para preenchimento medio de 100ml a uma vazão de 4L por min 
     delay(tempo_vazao_100ml);
-    para_rele();
+    parar_rele();
   }
   // Verifica o estado do botão B
   if (digitalRead(botao_B) == LOW) {
