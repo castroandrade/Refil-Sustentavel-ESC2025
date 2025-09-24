@@ -1,7 +1,7 @@
 
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h> // Nome da biblioteca corrigido
+#include <Adafruit_SSD1306.h> 
 #include <string>
 #define JOYSTICK_BUTTON 22
 
